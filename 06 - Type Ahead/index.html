@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    const cities = new Array
+
+    fetch(endpoint)
+    .then(blob => blob.json())
+    .then(data => cities.push(...data))
+
+    const searchInput = document.querySelector('.search')
+    const citiesList = document.querySelector('.suggestions')
+
+    searchInput.addEventListener('input', searchWord)
+
+    function searchWord() {
+      const searchValue = String(searchInput.value).toLowerCase()
+      const citiesFilter = cities.filter(place => String(place.city).toLocaleLowerCase().includes(searchValue) || String(place.state).toLocaleLowerCase().includes(searchValue))
+      
+      citiesList.innerHTML = ''
+      citiesFilter.forEach(city => {
+        const listItem = document.createElement('li')
+        const span = document.createElement('span')
+        const cityPopulation = city.population
+
+        span.classList.add('population')
+        span.textContent = Number(cityPopulation).toLocaleString()
+        listItem.textContent = `${city.city}, ${city.state}`
+        citiesList.appendChild(listItem)
+        listItem.appendChild(span)
+      });
+    }
+
+  </script>
+</body>
+
+</html>
