@@ -9,6 +9,9 @@
 
   <script>
     // start with strings, numbers and booleans
+    let kluuse = 5
+    let zeroFicia = kluuse
+    console.log(kluuse, zeroFicia)
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
@@ -16,8 +19,12 @@
     // and we want to make a copy of it.
 
     // You might think we can just do something like this:
+    // const friends = players
+    // console.log(players, friends)
 
     // however what happens when we update that array?
+    // friends.push('kluuse')
+    // console.log(players, friends)
 
     // now here is the problem!
 
@@ -28,13 +35,29 @@
     // So, how do we fix this? We take a copy instead!
 
     // one way
+    const newSlice = players.slice()
+    console.log(players, newSlice)
+
+    newSlice.push('kluuse')
+    console.log(players, newSlice)
 
     // or create a new array and concat the old one in
+    const newConcat = [].concat(players)
+    console.log(players, newConcat)
+
+    newConcat.push('kluuse')
+    console.log(players, newConcat)
 
     // or use the new ES6 Spread
+    // const newSpread = [...players]
+    const newSpread = Array.from(players)
+    console.log(players, newSpread)
 
+    newSpread.push('kluuse')
+    console.log(players, newSpread)
+    
     // now when we update it, the original one isn't changed
-
+    
     // The same thing goes for objects, let's say we have a person object
 
     // with Objects
@@ -48,6 +71,12 @@
     // how do we take a copy instead?
 
     // We will hopefully soon see the object ...spread
+    const objSpread = JSON.parse(JSON.stringify(person))
+    // const objSpread = Object.assign({}, person)
+    console.log(person, objSpread)
+
+    objSpread.age = 92
+    console.log(person, objSpread)
 
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
 
