@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1.0×</div>
+    </div>
+  </div>
+
+<script>
+  const video = document.querySelector('.flex')
+  const speed = document.querySelector('.speed')
+  const speedHeight = speed.getBoundingClientRect().height
+  const speedBar = speed.querySelector('.speed-bar')
+  let isDown = false
+
+  window.addEventListener('mousemove', e => {
+    if (!isDown) return
+    e.preventDefault()
+
+    let offsetY = e.pageY - speed.offsetTop
+    e.pageY < speed.offsetTop ? offsetY = 0 : offsetY
+    e.pageY > speed.offsetTop + speedHeight ? offsetY = speedHeight : offsetY
+
+    const percentage = 100*offsetY/speedHeight
+
+    const max = 4
+    const min = .5
+    const playbackRate = (((max-min)*percentage/100) + min)
+
+    speedBar.style.setProperty('height', `${percentage}%`)
+    speedBar.textContent = `${playbackRate.toFixed(1)}x`
+    
+    video.playbackRate = playbackRate
+  })
+
+  speed.addEventListener('mousedown', () => setActive('add'))
+  window.addEventListener('mouseup', () => setActive('remove'))
+
+  function setActive(p){
+    speed.classList[p]('active')
+    isDown = p === 'add' ? true : false
+  }
+</script>
+</body>
+</html>
