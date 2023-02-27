@@ -34,32 +34,42 @@ function setTimer(timeTotal){
 }
 
 function subtractTimer(){
+    timeLeft--
+
     if (timeLeft <= 0){
         timeLeftTxt.style.fontSize = '10rem'
         timeLeftTxt.innerHTML = 'FINISHED!'
-    } else {
-        timeLeft--
-        let hours
-        let mins
-        let secs
-    
-        timeLeftTxt.innerHTML = ''
-    
-        if (timeLeft >= 3600){
-            hours = Math.floor(timeLeft/3600)
-            timeLeftTxt.innerHTML += `${hours}:`
-        }
-    
-        if (timeLeft >= 60){
-            mins = timeLeft % 3600
-            secs = mins % 60
-            mins = Math.floor(mins/60)
-            timeLeftTxt.innerHTML += `${String(mins).padStart(2, 0)}:${String(secs).padStart(2, 0)}`
-        } else {
-            secs = timeLeft
-            timeLeftTxt.innerHTML += `${String(secs).padStart(2, 0)}s`
-        }
+        endTimeTxt.innerHTML = ''
+        document.title = 'FINISHED!'
+        clearInterval(timer)
+        return
     }
+
+    let display = ''
+    let hours
+    let mins
+    let secs
+
+    timeLeftTxt.innerHTML = ''
+
+    if (timeLeft >= 3600){
+        hours = Math.floor(timeLeft/3600)
+        display += `${hours}:`
+    }
+
+    if (timeLeft >= 60){
+        mins = timeLeft % 3600
+        secs = mins % 60
+        mins = Math.floor(mins/60)
+        display += `${String(mins).padStart(2, 0)}:${String(secs).padStart(2, 0)}`
+    } else {
+        secs = timeLeft
+        display += `${String(secs).padStart(2, 0)}s`
+    }
+
+    timeLeftTxt.innerHTML = display
+    document.title = display
+    
 }
 
 const form = document.querySelector('#custom')
