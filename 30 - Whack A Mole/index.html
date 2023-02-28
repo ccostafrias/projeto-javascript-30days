@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whack A Mole!</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <h1>Whack-a-mole! <span class="score">0</span></h1>
+  <div class="inputs-wrapper">
+    <button onClick="startGame()">Start!</button>
+    <select name="difficulty" id="difficulty">
+      <option value="easy" selected>Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+      <option value="expert">Expert</option>
+    </select>
+  </div>
+
+  <div class="game">
+    <div class="hole hole1">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole2">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole3">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole4">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole5">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole6">
+      <div class="mole"></div>
+    </div>
+  </div>
+
+<script>
+  const holes = document.querySelectorAll('.hole');
+  const scoreBoard = document.querySelector('.score');
+  const moles = document.querySelectorAll('.mole');
+  const select = document.querySelector('#difficulty')
+  let score = 0
+  
+  randomTime = n => Math.random()*n
+
+  const levels = {
+    easy: {
+      min: .5,
+      max: 1
+    },
+    medium: {
+      min: .4,
+      max: .7
+    },
+    hard: {
+      min: .3,
+      max: .5
+    },
+    expert: {
+      min: .2,
+      max: .4
+    }
+  }
+
+  let actualLevel = select.value
+  let [min, max] = [levels[actualLevel].min, levels[actualLevel].max]
+  let random = Math.floor((randomTime(max-min) + min) * 1000)
+  
+  let timer
+  let lastHole
+
+  select.addEventListener('change', () => changeLevel(select.value))
+
+  function changeLevel(level){
+    actualLevel = level
+    min = levels[actualLevel].min
+    max = levels[actualLevel].max
+  }
+
+  function startGame() {
+    if (timer) return
+
+    score = 0
+    scoreBoard.textContent = score
+
+    timer = setTimeout(() => {
+      timer = null
+      moles.forEach(mole => mole.classList.remove('up'))
+    }, 10000)
+
+    setTimeout(moleJump, random)
+  }
+
+  function moleJump(){
+    if (!timer) return
+    
+    moles.forEach(mole => mole.classList.remove('up'))
+
+    random = Math.floor((randomTime(max-min) + min) * 1000)
+    setTimeout(moleJump, random)
+
+    let index = Math.floor(randomTime(holes.length))
+    while (index === lastHole){
+      index = Math.floor(randomTime(holes.length))
+    }
+    moles[index].classList.add('up')
+    lastHole = index
+  }
+
+  holes.forEach(hole => {
+    hole.addEventListener('click', e => {
+      if (!e.isTrusted) return
+
+      if (e.target.classList.contains('mole')){
+        e.target.classList.remove('up')
+        score++
+        scoreBoard.textContent = score
+      }
+    })
+  })
+
+</script>
+</body>
+</html>
